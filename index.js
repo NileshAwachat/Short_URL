@@ -1,15 +1,21 @@
 const express= require('express')
 const app = express()
 const path = require('path')
-const urlRout = require('./Routes/url')
-const staticRoute = require('./Routes/staticRouters')
+
 const {connectionToMongooDB} = require('./connection')
 const url = require('./Models/url')
+
+const urlRout = require('./Routes/url')
+const staticRoute = require('./Routes/staticRouters')
+const userRoute = require('./Routes/user')
+
+
 const PORT = 8001
 
 app.set('view engine','ejs')
 app.set('views',path.resolve('./views'))
 app.use('/',staticRoute)
+app.use('/user',userRoute)
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 app.use('/url',urlRout)

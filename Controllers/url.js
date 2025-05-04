@@ -25,10 +25,19 @@ async function HandleGenerateShortURL(req,res) {
     }
 }
 async function handleGetAnalytics(req,res) {
-    const shortID = req.params.shortid;
-    const result = await url.findOne({shortId: shortID})
-    return res.json({
-        totalClicks:result.visitHistory.length,
-        analytics:result.visitHistory})
+    try {
+        const shortID = req.params.shortid;
+        const result = await url.findOne({shortId: shortID})
+        if (!result) {
+            return res.status(404).json({ error: 'Short URL not found' });
+        }
+        return res.json({
+            totalClicks: result.visitHistory.length,
+            analytics: result.visitHistory
+        })
+    } catch (error) {
+        console.error('Error in handleGetAnalytics:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
 } 
 module.exports = {HandleGenerateShortURL,handleGetAnalytics}
